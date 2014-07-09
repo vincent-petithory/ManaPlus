@@ -23,6 +23,8 @@
 #ifndef GUI_WIDGETS_TABS_CHATTAB_H
 #define GUI_WIDGETS_TABS_CHATTAB_H
 
+#include <SDL_thread.h>
+
 #include "gui/chatmsgtype.h"
 
 #include "gui/widgets/browserbox.h"
@@ -186,6 +188,7 @@ class ChatTab notfinal : public Tab
         bool mRemoveNames;
         bool mNoAway;
         bool mShowOnline;
+        SDL_mutex *mChatInputMutex;
 };
 
 extern ChatTab *localChatTab;

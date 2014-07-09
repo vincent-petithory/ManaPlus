@@ -72,7 +72,8 @@ ChatTab::ChatTab(const Widget2 *const widget,
     mAllowHightlight(true),
     mRemoveNames(false),
     mNoAway(false),
-    mShowOnline(false)
+    mShowOnline(false),
+    mChatInputMutex(SDL_CreateMutex())
 {
     setCaption(name);
 
@@ -97,6 +98,7 @@ ChatTab::~ChatTab()
 
     delete2(mTextOutput);
     delete2(mScrollArea);
+    SDL_DestroyMutex(mChatInputMutex);
 }
 
 void ChatTab::chatLog(std::string line, ChatMsgType::Type own,
@@ -400,6 +402,7 @@ void ChatTab::chatInput(const std::string &message)
 
     Commands::replaceVars(msg);
 
+    SDL_mutexP(mChatInputMutex);
     switch (msg[0])
     {
         case '/':
@@ -415,6 +418,7 @@ void ChatTab::chatInput(const std::string &message)
             handleInput(msg);
             break;
     }
+    SDL_mutexV(mChatInputMutex);
 }
 
 void ChatTab::scroll(const int amount)
